@@ -1,0 +1,1 @@
+const BaseUrl = 'https://student.valuxapps.com/api/';
