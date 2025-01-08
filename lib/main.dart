@@ -1,16 +1,26 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/login/login_screen.dart';
+import 'package:shop_app/shared/%20bloc_observer.dart';
+import 'package:shop_app/shared/cubit/cubit.dart';
 import 'package:shop_app/shared/network/local/shared_preferences.dart';
+import 'package:shop_app/shared/network/remote/dio_helper.dart';
+import 'layout/layout.dart';
 import 'modules/onboarding/onboarding_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Bloc.observer = MyBlocObserver();
+  DioHelper.init();
   await CacheHelper.init();
+
+
   runApp(const MyApp());
 }
 
 
-Widget startScreen () {
+Widget startScreen() {
   if (CacheHelper.getData(key: 'onboarding') != null) {
     return LoginScreen();
   } else {
@@ -23,9 +33,12 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: OnboardingScreen(),
+    return BlocProvider(
+      create: (context) => ShopAppCubit(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomeLayout(),
+      ),
     );
   }
 }

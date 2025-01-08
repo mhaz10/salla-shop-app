@@ -4,7 +4,7 @@ Widget defaultFormField ({
   required controller,
   required hintText,
   required keyboardType,
-  FormFieldValidator? validator,
+  required FormFieldValidator validator,
   ValueChanged<String>? onChanged,
   ValueChanged<String>? onFieldSubmitted,
   bool obscureText = false,
@@ -34,27 +34,21 @@ Widget defaultFormField ({
 Widget defaultButton({
   double width = double.infinity,
   Color background = Colors.blue,
-  double radius = 20.0,
   required VoidCallback? function,
-  required String text,
+  required Widget widget,
 }) {
   return Container(
     width: width,
     height: 50.0,
-    child: MaterialButton(
-      onPressed: function,
-      child: Text(
-        text.toUpperCase(),
-        style: TextStyle(
-          color: Colors.white,
-        ),
-      ),
-    ),
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(
-        radius,
+        20,
       ),
       color: background,
+    ),
+    child: MaterialButton(
+      onPressed: function,
+      child: widget,
     ),
   );
 }
