@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shop_app/layout/layout.dart';
 import 'package:shop_app/modules/login/cubit/cubit.dart';
 import 'package:shop_app/modules/login/cubit/states.dart';
 import 'package:shop_app/modules/register/register_screen.dart';
+import 'package:shop_app/shared/network/local/shared_preferences.dart';
 
 import '../../shared/components/components.dart';
+import '../../shared/components/constants.dart';
 
 class LoginScreen extends StatelessWidget {
    LoginScreen({super.key});
@@ -28,8 +31,14 @@ class LoginScreen extends StatelessWidget {
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: Colors.black,
                 textColor: Colors.white,
-                fontSize: 16.0
-            );
+                fontSize: 16.0);
+            if (state.loginModel.status!){
+              CacheHelper.saveData(key: 'token' , value: state.loginModel.data!.token)
+                  .then((value) {
+                    token = state.loginModel.data!.token!;
+                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayout(),), (route) => false,);
+                  },);
+            }
           }
         },
 
@@ -84,8 +93,8 @@ class LoginScreen extends StatelessWidget {
 
                   SizedBox(height: 20,),
 
-                  state is! LoginLoadingState ? defaultButton(function: (){if(formKey.currentState!.validate()){
-                      LoginCubit.get(context).userLogin(email: emailController.text, password: passwordController.text);
+                  state is! LoginLoadingState ?
+                  defaultButton(function: (){if(formKey.currentState!.validate()){ LoginCubit.get(context).userLogin(email: emailController.text, password: passwordController.text);
                     }}, widget: Text('Login'.toUpperCase(),style:  TextStyle(color: Colors.white),)) : defaultButton(function: (){}, widget: CircularProgressIndicator()),
 
                   SizedBox(height: 20,),

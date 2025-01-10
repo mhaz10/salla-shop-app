@@ -22,7 +22,11 @@ void main() async {
 
 Widget startScreen() {
   if (CacheHelper.getData(key: 'onboarding') != null) {
-    return LoginScreen();
+    if (CacheHelper.getData(key: 'token') != null) {
+      return HomeLayout();
+    } else {
+      return LoginScreen();
+    }
   } else {
     return OnboardingScreen();
   }
@@ -34,10 +38,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShopAppCubit(),
+      create: (context) => ShopAppCubit()..getHomeData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeLayout(),
+        home: startScreen(),
       ),
     );
   }
