@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/modules/register/cubit/cubit.dart';
 import 'package:shop_app/modules/register/cubit/state.dart';
+import '../../layout/layout.dart';
 import '../../shared/components/components.dart';
+import '../../shared/components/constants.dart';
+import '../../shared/network/local/shared_preferences.dart';
 
 class RegisterScreen extends StatelessWidget {
    RegisterScreen({super.key});
@@ -21,18 +24,27 @@ class RegisterScreen extends StatelessWidget {
     return BlocProvider(
   create: (context) => RegisterCubit(),
   child: BlocConsumer<RegisterCubit, RegisterState>(
-  listener: (context, state) {
-    if (state is RegisterSuccessState) {
-      Fluttertoast.showToast(
-          msg: state.loginModel.message!,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.black,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-    }
-  },
+    listener: (context, state) {
+      if (state is RegisterSuccessState) {
+        Fluttertoast.showToast(
+            msg: state.loginModel.message!,
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.black,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        if (state.loginModel.status!){
+          CacheHelper.saveData(key: 'token' , value: state.loginModel.data!.token)
+              .then((value) {
+
+            TOKEN = state.loginModel.data!.token!;
+
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayout(),), (route) => false,);
+          },);
+        }
+      }
+    },
+
   builder: (context, state) {
     return Scaffold(
       body: SafeArea(

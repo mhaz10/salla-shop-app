@@ -5,3 +5,11 @@ const LOGIN = 'login';
 const REGISTER = 'register';
 
 const HOME = 'home';
+
+const CATEGORIES = 'categories';
+
+const PROFILE = 'profile';
+
+const LOGOUT = 'logout';
+
+const UPDATE = 'update-profile';

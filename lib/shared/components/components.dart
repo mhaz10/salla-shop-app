@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 Widget defaultFormField ({
   required controller,
-  required hintText,
+  hintText,
   required keyboardType,
-  required FormFieldValidator validator,
+  FormFieldValidator? validator,
   ValueChanged<String>? onChanged,
   ValueChanged<String>? onFieldSubmitted,
   bool obscureText = false,

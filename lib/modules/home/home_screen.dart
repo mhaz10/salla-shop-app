@@ -1,6 +1,8 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:shop_app/models/categories/category.model.dart';
 import 'package:shop_app/models/home/home_model.dart';
 import 'package:shop_app/shared/cubit/cubit.dart';
 
@@ -10,13 +12,13 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ConditionalBuilder(
-      condition: ShopAppCubit.get(context).homeModel != null,
-      builder: (context) => homePageBuilder(ShopAppCubit.get(context).homeModel!),
+      condition: ShopAppCubit.get(context).homeModel != null && ShopAppCubit.get(context).categoryModel != null,
+      builder: (context) => homePageBuilder(ShopAppCubit.get(context).homeModel!,ShopAppCubit.get(context).categoryModel!),
       fallback: (context) => Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget homePageBuilder (HomeModel homeModel) {
+  Widget homePageBuilder (HomeModel homeModel, CategoryModel categoryModel) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -45,6 +47,24 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14,),
+          Padding(
+            padding: const EdgeInsets.all(14.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Categories', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                Container(
+                    height: 100,
+                    child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (context, index) => categoryBuilder(categoryModel.categoryData!.data[index]),
+                        separatorBuilder: (context, index) => SizedBox(width: 14,),
+                        itemCount: categoryModel.categoryData!.data.length)),
+                Text('Products', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+              ],
+            ),
+          ),
+          SizedBox(height: 14,),
           Container(
             color: Colors.grey[300],
             child: GridView.count(
@@ -59,6 +79,29 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget categoryBuilder (DataModel dataModel) {
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        Image.network(
+          dataModel.image!,
+          height: 100,
+          width: 100,
+          errorBuilder: (context, error, stackTrace) {
+            return Center(
+              child: Icon(Icons.error, color: Colors.red, size: 50),
+            );
+          },
+        ),
+        Container(
+          width: 100,
+          color: Colors.black.withOpacity(0.3),
+          child: Text(dataModel.name! , textAlign: TextAlign.center ,style: TextStyle(color: Colors.white),),
+        )
+      ],
     );
   }
 

@@ -28,7 +28,7 @@ class DioHelper {
     );
   }
 
-  static Future<Response> postData ({required String url, required Map<String, dynamic> data, Map<String, dynamic>? query, String? lang, String? token}) async {
+  static Future<Response> postData ({required String url, Map<String, dynamic>? data, Map<String, dynamic>? query, String? lang, String? token}) async {
 
     dio!.options.headers = {
       'Content-Type' : 'application/json',

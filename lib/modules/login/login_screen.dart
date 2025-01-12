@@ -35,7 +35,9 @@ class LoginScreen extends StatelessWidget {
             if (state.loginModel.status!){
               CacheHelper.saveData(key: 'token' , value: state.loginModel.data!.token)
                   .then((value) {
-                    token = state.loginModel.data!.token!;
+
+                    TOKEN = state.loginModel.data!.token!;
+
                     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => HomeLayout(),), (route) => false,);
                   },);
             }
