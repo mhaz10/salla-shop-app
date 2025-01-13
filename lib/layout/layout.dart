@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/modules/cateogries/cateogries_screen.dart';
 import 'package:shop_app/modules/favorites/favorites_screen.dart';
 import 'package:shop_app/modules/home/home_screen.dart';
+import 'package:shop_app/modules/search/search_screen.dart';
 import 'package:shop_app/modules/settings/settings_screen.dart';
 import 'package:shop_app/shared/cubit/states.dart';
 
@@ -25,7 +26,9 @@ class HomeLayout extends StatelessWidget {
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
 
             actions: [
-              IconButton(onPressed: () {}, icon: Icon(Icons.search)),
+              IconButton(onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => SearchScreen(),));
+              }, icon: Icon(Icons.search)),
             ],
           ),
 

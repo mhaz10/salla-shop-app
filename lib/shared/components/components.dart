@@ -52,3 +52,12 @@ Widget defaultButton({
     ),
   );
 }
+
+Widget searchBox({
+  TextEditingController? controller,
+  ValueChanged<String>? onChange,
+  String? hintText,
+}) => TextFormField(
+    controller: controller,
+    onChanged: onChange,
+    decoration: InputDecoration.collapsed(hintText:hintText),autofocus: true);

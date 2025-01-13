@@ -53,6 +53,8 @@ class HomeScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Categories', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
+                SizedBox(height: 20,),
+
                 Container(
                     height: 100,
                     child: ListView.separated(
@@ -60,6 +62,9 @@ class HomeScreen extends StatelessWidget {
                         itemBuilder: (context, index) => categoryBuilder(categoryModel.categoryData!.data[index]),
                         separatorBuilder: (context, index) => SizedBox(width: 14,),
                         itemCount: categoryModel.categoryData!.data.length)),
+
+                SizedBox(height: 20,),
+
                 Text('Products', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
               ],
             ),
