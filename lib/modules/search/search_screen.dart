@@ -52,7 +52,7 @@ class SearchScreen extends StatelessWidget {
                     separatorBuilder: (context, index) => Divider(),
                     itemCount: searchList.length),
 
-                fallback: (context) => Center(child: CircularProgressIndicator())),
+                fallback: (context) => Center(child: Text('There are no results to display', style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),),),),
           );
         },
       ),
