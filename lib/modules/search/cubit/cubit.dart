@@ -19,10 +19,25 @@ class SearchCubit extends Cubit<SearchState> {
     
     DioHelper.postData(url: SEARCH, token: TOKEN, data: {	"text": text}).then((value) {
       searchModel = SearchModel.fromJson(value.data);
+      print(searchModel!.searchData!.data.length);
+      print(searchModel!.searchData!.data[0].name);
       emit(SearchSuccessState());
     }).catchError((error){
       print(error.toString());
       emit(SearchErrorState());
     });
+  }
+
+
+  var searchList = [];
+
+  void getSearch (String text) {
+    if (text.isNotEmpty) {
+      searchList =  searchModel!.searchData!.data;
+      emit(SearchSuccessState());
+    } else  {
+      searchList = [];
+      emit(SearchErrorState());
+    }
   }
 }

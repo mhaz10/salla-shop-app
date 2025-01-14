@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/modules/cateogries/cateogries_screen.dart';
 import 'package:shop_app/modules/favorites/favorites_screen.dart';
 import 'package:shop_app/modules/home/home_screen.dart';
@@ -16,8 +17,17 @@ class HomeLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<ShopAppCubit, ShopAppState>(
       listener: (context, state) {
-
+        if (state is ShopAppSuccessChangeFavoritesState) {
+          Fluttertoast.showToast(
+              msg: state.changeFavoritesModel.message!,
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
       },
+
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(

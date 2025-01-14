@@ -13,12 +13,12 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return ConditionalBuilder(
       condition: ShopAppCubit.get(context).homeModel != null && ShopAppCubit.get(context).categoryModel != null,
-      builder: (context) => homePageBuilder(ShopAppCubit.get(context).homeModel!,ShopAppCubit.get(context).categoryModel!),
+      builder: (context) => homePageBuilder(ShopAppCubit.get(context).homeModel!,ShopAppCubit.get(context).categoryModel!, context),
       fallback: (context) => Center(child: CircularProgressIndicator()),
     );
   }
 
-  Widget homePageBuilder (HomeModel homeModel, CategoryModel categoryModel) {
+  Widget homePageBuilder (HomeModel homeModel, CategoryModel categoryModel, context) {
     return SingleChildScrollView(
       physics: BouncingScrollPhysics(),
       child: Column(
@@ -79,7 +79,7 @@ class HomeScreen extends StatelessWidget {
                 childAspectRatio: 1 / 1.55,
                 crossAxisSpacing: 1.0,
                 mainAxisSpacing: 1.0,
-                children: List.generate(homeModel.data!.products.length, (index) => productsBuilder(homeModel.data!.products[index])),
+                children: List.generate(homeModel.data!.products.length, (index) => productsBuilder(homeModel.data!.products[index], context)),
             ),
           ),
         ],
@@ -110,7 +110,7 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget productsBuilder (Product product) {
+  Widget productsBuilder (Product product, context) {
     return Container(
       color: Colors.white,
       child: Column(
@@ -145,7 +145,11 @@ class HomeScreen extends StatelessWidget {
                     if(product.discount != 0)
                     Text(product.oldPrice!.toString(), style: TextStyle(color: Colors.grey, decoration: TextDecoration.lineThrough)),
                     Spacer(),
-                    IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border))
+                    IconButton(
+                        onPressed: (){
+                          ShopAppCubit.get(context).changeFavorites(productId: product.id!);
+                        },
+                        icon: CircleAvatar(backgroundColor: ShopAppCubit.get(context).favorites[product.id]! ? Colors.blue : Colors.grey, radius: 20 , child: Icon(Icons.favorite_border, color: Colors.white,)))
                   ],
                 ),
               ],

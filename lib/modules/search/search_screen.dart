@@ -21,11 +21,6 @@ class SearchScreen extends StatelessWidget {
 
         builder: (context, state) {
 
-          var searchList = [];
-
-          if (SearchCubit.get(context).searchModel != null){
-            searchList = SearchCubit.get(context).searchModel!.searchData!.data!;
-          }
 
           return Scaffold(
             appBar: AppBar(
@@ -36,21 +31,22 @@ class SearchScreen extends StatelessWidget {
               title: searchBox(
                 controller: searchController,
                 hintText: 'Enter Your Search',
-                onChange: (value) {
-                  SearchCubit.get(context).search(text: searchController.text);
-                  searchList.clear();
+                onFieldSubmitted: (value) {
+                  String text = "${searchController.text}";
+                    SearchCubit.get(context).search(text: text);
+                    SearchCubit.get(context).getSearch(text);
                 }
               ),
             ),
 
 
             body: ConditionalBuilder(
-                condition: searchList.length > 0 ,
+                condition: SearchCubit.get(context).searchList.length > 0 ,
 
                 builder: (context) => ListView.separated(
-                    itemBuilder: (context, index) => productsBuilder(searchList[index]),
+                    itemBuilder: (context, index) => productsBuilder(SearchCubit.get(context).searchList[index]),
                     separatorBuilder: (context, index) => Divider(),
-                    itemCount: searchList.length),
+                    itemCount: SearchCubit.get(context).searchList.length),
 
                 fallback: (context) => Center(child: Text('There are no results to display', style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),),),),
           );

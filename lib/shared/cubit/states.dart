@@ -1,17 +1,37 @@
+import 'package:shop_app/models/change_favorites/change_favorites.dart';
 import 'package:shop_app/models/login/login_model.dart';
 
 abstract class ShopAppState {}
 
 class ShopAppInitState extends ShopAppState {}
 
-
 class ShopAppChangeNavBarState extends ShopAppState {}
+
 
 class ShopAppLoadingHomeState extends ShopAppState {}
 
 class ShopAppSuccessHomeState extends ShopAppState {}
 
 class ShopAppErrorHomeState extends ShopAppState {}
+
+
+class ShopAppChangeFavoritesState extends ShopAppState {}
+
+class ShopAppSuccessChangeFavoritesState extends ShopAppState {
+  final ChangeFavoritesModel changeFavoritesModel;
+
+  ShopAppSuccessChangeFavoritesState(this.changeFavoritesModel);
+}
+
+class ShopAppErrorChangeFavoritesState extends ShopAppState {}
+
+
+class ShopAppLoadingFavoritesState extends ShopAppState {}
+
+class ShopAppSuccessFavoritesState extends ShopAppState {}
+
+class ShopAppErrorFavoritesState extends ShopAppState {}
+
 
 class ShopAppSuccessCategoryState extends ShopAppState {}
 
