@@ -7,6 +7,11 @@ class ShopAppInitState extends ShopAppState {}
 
 class ShopAppChangeNavBarState extends ShopAppState {}
 
+class ShopAppChangeMode extends ShopAppState {}
+
+class ShopAppChangeLanguage extends ShopAppState {}
+
+class ShopAppChangeLanguageLoading extends ShopAppState {}
 
 class ShopAppLoadingHomeState extends ShopAppState {}
 

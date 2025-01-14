@@ -5,7 +5,6 @@ import 'package:shop_app/models/change_favorites/change_favorites.dart';
 import 'package:shop_app/models/favorites/favorites_model.dart';
 import 'package:shop_app/models/home/home_model.dart';
 import 'package:shop_app/models/login/login_model.dart';
-import 'package:shop_app/modules/favorites/favorites_screen.dart';
 import 'package:shop_app/shared/cubit/states.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 
@@ -23,6 +22,27 @@ class ShopAppCubit extends Cubit<ShopAppState> {
   void changeBottomNavBar ({required int index}) {
     currentIndex = index;
     emit(ShopAppChangeNavBarState());
+  }
+
+  bool isDark = false;
+
+  void changeAppMode ({required bool value}) {
+    isDark = value;
+    emit(ShopAppChangeMode());
+  }
+
+  String? language;
+
+  void changeAppLanguage({required String lang}) {
+
+    language = lang;
+    emit(ShopAppChangeLanguage());
+
+    // getHomeData();
+    // //getFavoritesData();
+    // getCategories();
+    // //getProfile();
+    emit(ShopAppChangeLanguageLoading());
   }
 
   HomeModel? homeModel;

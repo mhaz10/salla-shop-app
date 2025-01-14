@@ -38,61 +38,73 @@ class SettingsScreen extends StatelessWidget {
           emailController.text = ShopAppCubit.get(context).userData!.data!.email!;
         }
 
-        return ConditionalBuilder(
-            condition: ShopAppCubit.get(context).userData != null,
-            builder: (context) => Padding(
-              padding: const EdgeInsets.all(14.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                
-                    if (state is ShopAppLoadingUpdateState)
-                
-                      LinearProgressIndicator(),
-                
-                    SizedBox(height: 20,),
-                
-                    defaultFormField(
-                        controller: nameController,
-                        keyboardType: TextInputType.name,
-                        labelText: 'Name',
-                        prefixIcon: Icon(Icons.person)),
-                
-                    SizedBox(height: 20,),
-                
-                    defaultFormField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone,
-                        labelText: 'Phone Number',
-                        prefixIcon: Icon(Icons.phone)),
-                
-                    SizedBox(height: 20,),
-                
-                    defaultFormField(
-                        controller: emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        labelText: 'Email Address',
-                        prefixIcon: Icon(Icons.email)),
-                
-                    SizedBox(height: 20,),
-                
-                    defaultButton(function: (){
-                      ShopAppCubit.get(context).updateProfile(name: nameController.text, phone: phoneController.text, email: emailController.text);
-                    }, widget: Text('UDATE')),
-                
-                    SizedBox(height: 20,),
-                
-                    defaultButton(function: (){
-                      CacheHelper.removeData(key: 'token').then((value) {
-                        ShopAppCubit.get(context).Logout();
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
-                      },);
-                    }, widget: Text('LOGOUT'))
-                  ],
+        return Scaffold(
+          appBar: AppBar(),
+
+          body: ConditionalBuilder(
+              condition: ShopAppCubit.get(context).userData != null,
+              builder: (context) => Padding(
+                padding: const EdgeInsets.all(14.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+
+                      CircleAvatar(
+                        radius: 100,
+                        backgroundColor: Colors.blue,
+                        backgroundImage: AssetImage('assets/images/user_profile.png'),
+                      ),
+
+                      SizedBox(height: 20,),
+
+                      if (state is ShopAppLoadingUpdateState)
+
+                        LinearProgressIndicator(),
+
+                      SizedBox(height: 20,),
+
+                      defaultFormField(
+                          controller: nameController,
+                          keyboardType: TextInputType.name,
+                          labelText: 'Name',
+                          prefixIcon: Icon(Icons.person)),
+
+                      SizedBox(height: 20,),
+
+                      defaultFormField(
+                          controller: phoneController,
+                          keyboardType: TextInputType.phone,
+                          labelText: 'Phone Number',
+                          prefixIcon: Icon(Icons.phone)),
+
+                      SizedBox(height: 20,),
+
+                      defaultFormField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          labelText: 'Email Address',
+                          prefixIcon: Icon(Icons.email)),
+
+                      SizedBox(height: 20,),
+
+                      defaultButton(function: (){
+                        ShopAppCubit.get(context).updateProfile(name: nameController.text, phone: phoneController.text, email: emailController.text);
+                      }, widget: Text('UDATE')),
+
+                      SizedBox(height: 20,),
+
+                      defaultButton(function: (){
+                        CacheHelper.removeData(key: 'token').then((value) {
+                          ShopAppCubit.get(context).Logout();
+                          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => LoginScreen()), (route) => false);
+                        },);
+                      }, widget: Text('LOGOUT'))
+                    ],
+                  ),
                 ),
               ),
-            ),
-            fallback: (context) => Center(child: CircularProgressIndicator()));
+              fallback: (context) => Center(child: CircularProgressIndicator())),
+        );
       },
     );
   }
