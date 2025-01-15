@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shop_app/models/login/login_model.dart';
 import 'package:shop_app/modules/cateogries/cateogries_screen.dart';
 import 'package:shop_app/modules/favorites/favorites_screen.dart';
 import 'package:shop_app/modules/home/home_screen.dart';
@@ -30,7 +31,9 @@ class HomeLayout extends StatelessWidget {
 
       builder: (context, state) {
         return Scaffold(
+          backgroundColor: Theme.of(context).colorScheme.background,
           appBar: AppBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
             centerTitle: true,
             title: Text('Salla',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold)),
@@ -46,7 +49,7 @@ class HomeLayout extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  buildHeader(context),
+                  buildHeader(context, ShopAppCubit.get(context).userData!.data!),
                   buildMenuItem(context, ShopAppCubit.get(context).isDark),
                 ],
               ),
@@ -54,11 +57,12 @@ class HomeLayout extends StatelessWidget {
           ),
 
           bottomNavigationBar: BottomNavigationBar(
+            backgroundColor: Theme.of(context).colorScheme.primary,
               onTap: (index) {
                 ShopAppCubit.get(context).changeBottomNavBar(index: index);
               },
               currentIndex: ShopAppCubit.get(context).currentIndex,
-              selectedItemColor: Colors.black,
+              selectedItemColor: Colors.blue,
               unselectedItemColor: Colors.grey,
               type: BottomNavigationBarType.fixed,
               items: [
@@ -82,7 +86,7 @@ class HomeLayout extends StatelessWidget {
     );
   }
 
-  Widget buildHeader(BuildContext context) {
+  Widget buildHeader(BuildContext context, Data userData) {
     return Container(
       color: Colors.blue.shade700,
       width: double.infinity,
@@ -97,8 +101,8 @@ class HomeLayout extends StatelessWidget {
             backgroundImage: AssetImage('assets/images/user_profile.png'),
           ),
           SizedBox(height: 12,),
-          Text('Amr Hosny', style: TextStyle(fontSize: 28, color: Colors.white),),
-          Text('AmrHosny@gamil.com', style: TextStyle(fontSize: 16, color: Colors.white),),
+          Text(userData.name!, style: TextStyle(fontSize: 28, color: Colors.white),),
+          Text(userData.email!, style: TextStyle(fontSize: 16, color: Colors.white),),
         ],
       ),
     );
@@ -147,7 +151,7 @@ class HomeLayout extends StatelessWidget {
             trailing: Switch(
                 value: isDark,
                 onChanged: (value) {
-                  ShopAppCubit.get(context).changeAppMode(value: value);
+                  ShopAppCubit.get(context).changeThemeMode(isDark: value);
                 }),
           ),
         ],

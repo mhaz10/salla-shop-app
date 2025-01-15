@@ -48,7 +48,7 @@ class SearchScreen extends StatelessWidget {
                     separatorBuilder: (context, index) => Divider(),
                     itemCount: SearchCubit.get(context).searchList.length),
 
-                fallback: (context) => Center(child: Text('There are no results to display', style: TextStyle(fontSize: 20 , fontWeight: FontWeight.bold),),),),
+                fallback: (context) => Center(child: Text('There are no results to display', style: TextStyle(fontSize: 18 , fontWeight: FontWeight.w400),),),),
           );
         },
       ),

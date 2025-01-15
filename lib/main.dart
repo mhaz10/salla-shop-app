@@ -5,6 +5,7 @@ import 'package:shop_app/modules/login/login_screen.dart';
 import 'package:shop_app/shared/%20bloc_observer.dart';
 import 'package:shop_app/shared/components/constants.dart';
 import 'package:shop_app/shared/cubit/cubit.dart';
+import 'package:shop_app/shared/cubit/states.dart';
 import 'package:shop_app/shared/network/local/shared_preferences.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
 import 'layout/layout.dart';
@@ -42,11 +43,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ShopAppCubit()..getHomeData()..getCategories()..getProfile()..getFavoritesData(),
-      child: MaterialApp(
+      create: (context) => ShopAppCubit()
+        ..getHomeData()
+        ..getProfile(fromShared: CacheHelper.getData(key: 'userData'))
+        ..changeThemeMode(isDark: CacheHelper.getData(key: 'isDark'))
+        ..changeAppLanguage(fromShared: CacheHelper.getData(key: 'lang')),
+      child: BlocConsumer<ShopAppCubit, ShopAppState>(
+  listener: (context, state) {
+    // TODO: implement listener
+  },
+  builder: (context, state) {
+    return MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ShopAppCubit.get(context).themeData,
         home: startScreen(),
-      ),
+      );
+  },
+),
     );
   }
 }

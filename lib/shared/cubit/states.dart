@@ -17,7 +17,11 @@ class ShopAppLoadingHomeState extends ShopAppState {}
 
 class ShopAppSuccessHomeState extends ShopAppState {}
 
-class ShopAppErrorHomeState extends ShopAppState {}
+class ShopAppErrorHomeState extends ShopAppState {
+  final String error;
+
+  ShopAppErrorHomeState(this.error);
+}
 
 
 class ShopAppChangeFavoritesState extends ShopAppState {}

@@ -3,6 +3,7 @@ import 'package:conditional_builder_null_safety/conditional_builder_null_safety.
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shop_app/models/categories/category.model.dart';
 import 'package:shop_app/models/home/home_model.dart';
 import 'package:shop_app/shared/cubit/cubit.dart';
@@ -14,9 +15,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ShopAppCubit, ShopAppState>(
-  listener: (context, state) {
-    // TODO: implement listener
-  },
+  listener: (context, state) {},
+
   builder: (context, state) {
     return ConditionalBuilder(
       condition: state is! ShopAppChangeLanguageLoading && ShopAppCubit.get(context).homeModel != null && ShopAppCubit.get(context).categoryModel != null,
@@ -113,7 +113,7 @@ class HomeScreen extends StatelessWidget {
         Container(
           width: 100,
           color: Colors.black.withOpacity(0.3),
-          child: Text(dataModel.name! , textAlign: TextAlign.center ,style: TextStyle(color: Colors.white),),
+          child: Text(dataModel.name! , maxLines: 1, overflow:  TextOverflow.ellipsis, textAlign: TextAlign.center ,style: TextStyle(color: Colors.white),),
         )
       ],
     );
@@ -121,14 +121,14 @@ class HomeScreen extends StatelessWidget {
 
   Widget productsBuilder (Product product, context) {
     return Container(
-      color: Colors.white,
+      color: Theme.of(context).colorScheme.primary,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             alignment: Alignment.bottomLeft,
             children: [
-              Image.network(product.image!, width: double.infinity , height: 180, errorBuilder: (context, error, stackTrace) {
+              Image.network(product.image!, fit: BoxFit.fill, width: double.infinity , height: 180, errorBuilder: (context, error, stackTrace) {
                 return Center(
                   child: Icon(Icons.error, color: Colors.red, size: 50),
                 );

@@ -1,85 +1,49 @@
 class FavoritesModel {
-  final bool status;
-  final FavoritesData? favoritesData;
+   bool? status;
+   FavoritesData? favoritesData;
 
-  FavoritesModel({
-    required this.status,
-    this.favoritesData,
-  });
-
-  factory FavoritesModel.fromJson(Map<String, dynamic> json) {
-    return FavoritesModel(
-      status: json['status'] ?? false,
-      favoritesData: json['data'] != null
-          ? FavoritesData.fromJson(json['data'])
-          : null,
-    );
+   FavoritesModel.fromJson(Map<String, dynamic> json) {
+      status =  json['status'];
+     favoritesData = json['data'] != null ? FavoritesData.fromJson(json['data']): null;
   }
 }
 
 class FavoritesData {
-  final List<Data> data;
+  List<Data> data = [];
 
-  FavoritesData({
-    required this.data,
-  });
-
-  factory FavoritesData.fromJson(Map<String, dynamic> json) {
-    return FavoritesData(
-      data: (json['data'] as List? ?? [])
-          .map((item) => Data.fromJson(item))
-          .toList(),
-    );
+  FavoritesData.fromJson(Map<String, dynamic> json) {
+    if (json['data'] != null) {
+      (json['data'] as List).forEach((element) => data.add(Data.fromJson(element)));
+    }
   }
 }
 
 class Data {
-  final int id;
-  final Product? product;
+   int? id;
+   Product? product;
 
-  Data({
-    required this.id,
-    this.product,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) {
-    return Data(
-      id: json['id'] ?? 0,
-      product: json['product'] != null
-          ? Product.fromJson(json['product'])
-          : null,
-    );
+   Data.fromJson(Map<String, dynamic> json) {
+      id = json['id'];
+      product = json['product'] != null ? Product.fromJson(json['product']) : null;
   }
 }
 
 class Product {
-  final int id;
-  final int price;
-  final int oldPrice;
-  final int discount;
-  final String image;
-  final String name;
-  final String description;
+  int? id;
+  dynamic price;
+  dynamic oldPrice;
+  int? discount;
+  String? image;
+  String? name;
+  bool? inFavorites;
 
-  Product({
-    required this.id,
-    required this.price,
-    required this.oldPrice,
-    required this.discount,
-    required this.image,
-    required this.name,
-    required this.description,
-  });
-
-  factory Product.fromJson(Map<String, dynamic> json) {
-    return Product(
-      id: json['id'] ?? 0,
-      price: json['price'] ?? 0,
-      oldPrice: json['old_price'] ?? 0,
-      discount: json['discount'] ?? 0,
-      image: json['image'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-    );
+  Product.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    price = json['price'];
+    oldPrice = json['old_price'];
+    discount = json['discount'];
+    image = json['image'];
+    name = json['name'];
+    inFavorites = json['in_favorites'];
   }
 }

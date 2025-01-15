@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shop_app/models/categories/category.model.dart';
 import 'package:shop_app/models/change_favorites/change_favorites.dart';
@@ -6,7 +7,9 @@ import 'package:shop_app/models/favorites/favorites_model.dart';
 import 'package:shop_app/models/home/home_model.dart';
 import 'package:shop_app/models/login/login_model.dart';
 import 'package:shop_app/shared/cubit/states.dart';
+import 'package:shop_app/shared/network/local/shared_preferences.dart';
 import 'package:shop_app/shared/network/remote/dio_helper.dart';
+import 'package:shop_app/shared/theme/theme.dart';
 
 import '../components/constants.dart';
 import '../network/end_points.dart';
@@ -24,25 +27,36 @@ class ShopAppCubit extends Cubit<ShopAppState> {
     emit(ShopAppChangeNavBarState());
   }
 
+
+  ThemeData themeData = lightMode;
   bool isDark = false;
 
-  void changeAppMode ({required bool value}) {
-    isDark = value;
-    emit(ShopAppChangeMode());
+  void changeThemeMode ({required bool isDark, bool? fromShared}) {
+    if (fromShared != null) {
+      themeData = fromShared ? darkMode : lightMode;
+      emit(ShopAppChangeMode());
+    } else {
+      themeData = isDark ? darkMode : lightMode;
+      this.isDark = isDark;
+
+      CacheHelper.saveData(key: 'isDark', value: isDark).then((value) {
+        emit(ShopAppChangeMode());
+      },);
+    }
   }
 
   String? language;
 
-  void changeAppLanguage({required String lang}) {
+  void changeAppLanguage({String? lang ,String? fromShared}) {
+    if (fromShared != null) {
+      language = fromShared;
+    } else  {
+      language = lang;
 
-    language = lang;
-    emit(ShopAppChangeLanguage());
-
-    // getHomeData();
-    // //getFavoritesData();
-    // getCategories();
-    // //getProfile();
-    emit(ShopAppChangeLanguageLoading());
+      CacheHelper.saveData(key: 'lang', value: language).then((value) {
+        emit(ShopAppChangeLanguage());
+      },);
+    }
   }
 
   HomeModel? homeModel;
@@ -52,22 +66,24 @@ class ShopAppCubit extends Cubit<ShopAppState> {
   void getHomeData() {
     emit(ShopAppLoadingHomeState());
 
-    DioHelper.getData(url: HOME, token: TOKEN).then((value) {
+    DioHelper.getData(url: HOME, token: TOKEN, lang: language).then((value) async {
       homeModel = HomeModel.fromJson(value.data);
       // homeModel!.data!.products.forEach(
-      //   (element) => favorites!.addAll({ element.id! : element.inFavorites! }),
+      //   (element) => favorites.addAll({ element.id! : element.inFavorites! }),
       // );
 
       for(final element in homeModel!.data!.products ) {
-        //  favorites[element.id!] = element.inFavorites!;
         favorites.addAll({ element.id! : element.inFavorites! });
       }
+
+      getFavoritesData();
+      getCategories();
 
 
       emit(ShopAppSuccessHomeState());
     }).catchError((error){
       print(error.toString());
-      emit(ShopAppErrorHomeState());
+      emit(ShopAppErrorHomeState(error.toString()));
     });
   }
 
@@ -77,8 +93,8 @@ class ShopAppCubit extends Cubit<ShopAppState> {
 
     favorites[productId] = !favorites[productId]!;
     emit(ShopAppChangeFavoritesState());
-    
-    DioHelper.postData(url: FAVORITES, token: TOKEN ,data: {"product_id": productId}).then((value){
+
+    DioHelper.postData(url: FAVORITES, token: TOKEN ,data: {"product_id": productId}, lang: language).then((value){
       changeFavoritesModel = ChangeFavoritesModel.fromJson(value.data);
 
       if (!changeFavoritesModel!.status!) {
@@ -93,7 +109,7 @@ class ShopAppCubit extends Cubit<ShopAppState> {
       print(error.toString());
       emit(ShopAppErrorChangeFavoritesState());
     });
-    
+
   }
 
   FavoritesModel? favoritesModel;
@@ -101,7 +117,7 @@ class ShopAppCubit extends Cubit<ShopAppState> {
   void getFavoritesData() {
     emit(ShopAppLoadingFavoritesState());
 
-    DioHelper.getData(url: FAVORITES, token: TOKEN).then((value) {
+    DioHelper.getData(url: FAVORITES, token: TOKEN, lang: language).then((value) {
       favoritesModel = FavoritesModel.fromJson(value.data);
       emit(ShopAppSuccessFavoritesState());
     }).catchError((error){
@@ -115,7 +131,7 @@ class ShopAppCubit extends Cubit<ShopAppState> {
 
   void getCategories() {
 
-    DioHelper.getData(url: CATEGORIES).then((value) {
+    DioHelper.getData(url: CATEGORIES, lang: language).then((value) {
       categoryModel = CategoryModel.fromJson(value.data);
       print(value.data);
       print(categoryModel!.categoryData!.data[0].name);
@@ -128,13 +144,21 @@ class ShopAppCubit extends Cubit<ShopAppState> {
 
   LoginModel? userData;
 
-  void getProfile () {
+  void getProfile ({LoginModel? fromShared}) {
+
+    if (fromShared != null){
+      userData = CacheHelper.getData(key: 'userData');
+    }
 
     emit(ShopAppLoadingProfileState());
 
-    DioHelper.getData(url: PROFILE, token: TOKEN).then((value) {
+    DioHelper.getData(url: PROFILE, token: TOKEN, lang: language).then((value) {
       userData = LoginModel.fromJson(value.data);
-      emit(ShopAppSuccessProfileState());
+
+      CacheHelper.saveData(key: 'userData', value: userData!).then((value) {
+        emit(ShopAppSuccessProfileState());
+      },);
+
     }).catchError((error){
       print(error.toString());
       emit(ShopAppErrorProfileState(error.toString()));
@@ -146,7 +170,7 @@ class ShopAppCubit extends Cubit<ShopAppState> {
 
     emit(ShopAppLoadingUpdateState());
 
-    DioHelper.putData(url: UPDATE, token: TOKEN, data: {"name": name, "phone": phone, "email": email,})
+    DioHelper.putData(url: UPDATE, token: TOKEN, data: {"name": name, "phone": phone, "email": email,}, lang: language)
         .then((value) {
       userData = LoginModel.fromJson(value.data);
       emit(ShopAppSuccessUpdateState(userData!));
@@ -159,7 +183,7 @@ class ShopAppCubit extends Cubit<ShopAppState> {
 
   void Logout () {
 
-    DioHelper.postData(url: LOGOUT, token: TOKEN).then((value) {
+    DioHelper.postData(url: LOGOUT, token: TOKEN, lang: language).then((value) {
       emit(ShopAppSuccessLogoutState());
     }).catchError((error){
       print(error.toString());

@@ -17,7 +17,7 @@ class CategoryScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return ConditionalBuilder(
-            condition: ShopAppCubit.get(context).categoryModel != null,
+            condition: state is! ShopAppChangeLanguageLoading && ShopAppCubit.get(context).categoryModel != null,
             builder: (context) => ListView.separated(
                 itemBuilder: (context, index) => buildCategoryItem(ShopAppCubit.get(context).categoryModel!.categoryData!.data[index]),
                 separatorBuilder: (context, index) => Divider(),
